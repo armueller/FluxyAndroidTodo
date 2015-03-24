@@ -30,7 +30,7 @@ So rather than jump right in and start building an application with an untested 
 I came up with this architecture after looking at [Flux](https://facebook.github.io/flux/) and trying to apply those concepts to Android, so if you have worked with Flux this section will be pretty familiar to you.
 
 Here is the basic architecture template
-**(pic)**
+![Architecture Template](/pictures/Architecture-General.png)
 As you can see, it is pretty similar to how Flux works with only a few modifications to make it Android Friendly.  The main difference is in how the dispatcher works.  Rather than build a dispatcher to mimic the behavior of the one Facebook built, I used an event bus instead [Otto](http://square.github.io/otto/).  Another minor difference is that I use models and stores.  Stores are dedicated for view state, while models hold other application data and business logic.
 
 ###Here is a detailed explanation of each part of the system
@@ -63,7 +63,7 @@ The Data Bus is the event bus that all model updates or view data updates are po
 This architecture decouples all the parts of an Android app which makes development much easier.  Additionally, DI becomes easier, and  practicing TDD becomes much less of a headache!
 
 Following is a diagram illustrating a few approaches to TDD you could take using this architecture.
-(pic of tdd)
+![Architecture Template with TDD](/pictures/Architecture-General-TDD.png)
 - First, you could publish mock data to the data bus and test to make sure the view displays the data correctly.
 - Second, you could publish mock data (if needed) to the data bus then simulate a user action and test to make sure the correct action was published to the action bus.
 - Third, you could publish mock actions to the action bus and test to make sure the data published to the data bus is correct.
@@ -73,7 +73,7 @@ Following is a diagram illustrating a few approaches to TDD you could take using
 To put this new architecture to the test, I decided to use it for a simple todo app (Really original of me, I know...).
 
 Here is a diagram along with a detailed explanation of how each part works.
-(pic)
+(pic)![Architecture Implementation with a ToDo App](/pictures/Architecture-Impl.png)
 If you want even more detail, you can look at the actual code provided in this repository.
 
 ##DI Details ([Dagger 2](http://google.github.io/dagger/) & [Butterknife](http://jakewharton.github.io/butterknife/))
