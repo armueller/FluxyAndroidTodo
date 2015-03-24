@@ -1,37 +1,37 @@
 #FluxyTodo
 FluxyTodo is an Android application that serves to demonstrate a few different things.
-- It is an example of how to use **Dagger 2** and **Butterknife** for DI and how to use **Otto** to decouple Android applications.
+- It is an example of how to use [Dagger 2](http://google.github.io/dagger/) and [Butterknife](http://jakewharton.github.io/butterknife/) for DI (dependency injection) in and how to use [Otto](http://square.github.io/otto/) to decouple Android applications.
 - It also serves as a proof of concept for a new Android application architecture I came up with.
-- It promotes dependency injection, TDD (Test driven development), and a unidirectional data-flow, which makes the separation of view and business logic simple and clear.
+- It promotes dependency injection, TDD (test driven development), and a unidirectional data-flow, which makes the separation of view and business logic simple and clear.
 
 ####If you want to skip around...
-- Motivation
-- Architecture
-- Implementation
-- DI Details
-- Future work
+- [Motivation](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#motivation-for-those-who-are-interested)
+- [Architecture](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#architecture)
+- [Implementation](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#implementation)
+- [DI Details](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#di-details-dagger-2--butterknife)
+- [Future work](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#future-work)
 
 ##Motivation (For those who are interested...)
 I recently embarked on a journey to make a new android application for a start up that I am a part of.  Being a software contractor, it is rare that I have the opportunity to build something from scratch.  When this opportunity presented itself, I was excited to be able to implement my arsenal of best practices and architecture patterns on the ground floor of a project.
 
-For a large part of the last year I was working on a web project and didn't have much opportunity to keep up with Android.  The team I was on was using **AngularJS** for the project and we had a heavy focus on making sure that all of our code was like Lego blocks (loose coupling, lots of DI, and minimal side effects). Programming in this way was extremely liberating and I wanted to be able to keep it up after I switched back to Android.  This of course, I knew would be no easy task... as if the absence of functions as first class citizens wasn't depressing enough...
+For a large part of the last year I was working on a web project and didn't have much opportunity to keep up with Android.  The team I was on was using [AngularJS](https://angularjs.org/) for the project and we had a heavy focus on making sure that all of our code was like Lego blocks (loose coupling, lots of DI, and minimal side effects). Programming in this way was extremely liberating and I wanted to be able to keep it up after I switched back to Android.  This of course, I knew would be no easy task... as if the absence of functions as first class citizens wasn't depressing enough...
 
-I decided to start with dependency injection.  I knew there were libraries out there to do this in Java and thus android, but I had always struggled with them in the past.  After a bit of searching I found **Dagger 2**.  After watching a some talks **(insert talk here)** and reading a few articles **(articles here)**, Dagger 2 seemed like the right way to go.  After a bit more digging I found **Butterknife** for view injection.  The biggest problem I ran into was the distinct lack of examples on how to use Dagger 2 effectively (probably because it is still in beta).  I did find a few, but they were mostly targeted on how to set it up and not so much on how to use it in an actual android application. **(list refs)**
+I decided to start with dependency injection.  I knew there were libraries out there to do this in Java and thus android, but I had always struggled with them in the past.  After a bit of searching I found [Dagger 2](http://google.github.io/dagger/).  After watching a some talks **(insert talk here)** and reading a few articles **(articles here)**, Dagger 2 seemed like the right way to go.  After a bit more digging I found [Butterknife](http://jakewharton.github.io/butterknife/) for view injection.  The biggest problem I ran into was the distinct lack of examples on how to use Dagger 2 effectively (probably because it is still in beta).  I did find a few, but they were mostly targeted on how to set it up and not so much on how to use it in an actual android application. **(list refs)**
 
 After I figured out what I wanted to do for dependency injection, I wanted to figure out a good application architecture that would allow for very loose coupling and make it easy to separate view logic from business logic (something I got pretty good at in Angular).  Another benefit of having an architecture like this is that it makes TDD much easier... Mocking activities and views just to be able to test that your models behave as they should is absurd.
 
-The architecture I decided on was **Flux**.  Obviously, Facebook made the Flux architecture for the web, and thus JavaScript, so I had to do a little bit of adapting in order to get it to work on Android.  With a little bit of tweaking (mainly with the dispatcher and they way the views accessed data) and the assistance of the **Otto library by Square**, I came up with a version of Flux that was Android compatible.
+The architecture I decided on was [Flux](https://facebook.github.io/flux/).  Obviously, Facebook made the Flux architecture for the web, and thus JavaScript, so I had to do a little bit of adapting in order to get it to work on Android.  With a little bit of tweaking (mainly with the dispatcher and they way the views accessed data) and the assistance of the [Otto library by Square](http://square.github.io/otto/), I came up with a version of Flux that was Android compatible.
 
 So rather than jump right in and start building an application with an untested architecture pattern and minimal familiarity with Dagger 2, Butterknife, and Otto, I decided to do a test run.  I followed Facebook's example and built a simple, but fully functional, todo application (Hence the name FluxyTodo).  On top of wanting to see how this architecture would pan out, I wanted to provide everybody with another example of how to use Dagger 2, Butterknife, and Otto.  Since the examples for these libraries in use are pretty sparse, especially in fully functional applications, I figured it would be a good addition to the community.
 
 *...Plus if more people adopt this architecture, android development might become a little less painful for everybody!*
 
 ##Architecture
-I came up with this architecture after looking at **Flux** and trying to apply those concepts to Android, so if you have worked with Flux this section will be pretty familiar to you.
+I came up with this architecture after looking at [Flux](https://facebook.github.io/flux/) and trying to apply those concepts to Android, so if you have worked with Flux this section will be pretty familiar to you.
 
 Here is the basic architecture template
 **(pic)**
-As you can see, it is pretty similar to how Flux works with only a few modifications to make it Android Friendly.  The main difference is in how the dispatcher works.  Rather than build a dispatcher to mimic the behavior of the one Facebook built, I used an event bus instead **Otto**.  Another minor difference is that I use models and stores.  Stores are dedicated for view state, while models hold other application data and business logic.
+As you can see, it is pretty similar to how Flux works with only a few modifications to make it Android Friendly.  The main difference is in how the dispatcher works.  Rather than build a dispatcher to mimic the behavior of the one Facebook built, I used an event bus instead [Otto](http://square.github.io/otto/).  Another minor difference is that I use models and stores.  Stores are dedicated for view state, while models hold other application data and business logic.
 
 ###Here is a detailed explanation of each part of the system
 ####View
@@ -76,7 +76,7 @@ Here is a diagram along with a detailed explanation of how each part works.
 (pic)
 If you want even more detail, you can look at the actual code provided in this repository.
 
-##DI Details (Dagger 2 & Butterknife)
+##DI Details ([Dagger 2](http://google.github.io/dagger/) & [Butterknife](http://jakewharton.github.io/butterknife/))
 As far as explaining what, how, and why, there are a few good tutorials already out there that do a pretty good job
 (refs)
 
