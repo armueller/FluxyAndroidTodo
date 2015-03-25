@@ -8,7 +8,7 @@ FluxyTodo is an Android application that serves to demonstrate a few different t
 - [Motivation](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#motivation-for-those-who-are-interested)
 - [Architecture](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#architecture)
 - [Implementation](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#implementation)
-- [DI Details](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#di-details-dagger-2--butterknife)
+- [References](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#references)
 - [Future work](https://github.com/armueller/FluxyAndroidTodo/tree/armueller-readme#future-work)
 
 ##Motivation (For those who are interested...)
@@ -16,7 +16,32 @@ I recently embarked on a journey to make a new android application for a start u
 
 For a large part of the last year I was working on a web project and didn't have much opportunity to keep up with Android.  The team I was on was using [AngularJS](https://angularjs.org/) for the project and we had a heavy focus on making sure that all of our code was like Lego blocks (loose coupling, lots of DI, and minimal side effects). Programming in this way was extremely liberating and I wanted to be able to keep it up after I switched back to Android.  This of course, I knew would be no easy task... as if the absence of functions as first class citizens wasn't depressing enough...
 
-I decided to start with dependency injection.  I knew there were libraries out there to do this in Java and thus android, but I had always struggled with them in the past.  After a bit of searching I found [Dagger 2](http://google.github.io/dagger/).  After watching a some talks **(insert talk here)** and reading a few articles **(articles here)**, Dagger 2 seemed like the right way to go.  After a bit more digging I found [Butterknife](http://jakewharton.github.io/butterknife/) for view injection.  The biggest problem I ran into was the distinct lack of examples on how to use Dagger 2 effectively (probably because it is still in beta).  I did find a few, but they were mostly targeted on how to set it up and not so much on how to use it in an actual android application. **(list refs)**
+I decided to start with dependency injection.  I knew there were libraries out there to do this in Java and thus android, but I had always struggled with them in the past.  After a bit of searching I found [Dagger 2](http://google.github.io/dagger/).  After watching a some talks...
+- [DAGGER 2 - A New Type of dependency injection by Gregory Kick](https://www.youtube.com/watch?v=oK_XtfXPkqw)
+- [The Future of Dependency Injection with Dagger 2 by Jake Wharton](https://www.parleys.com/talk/5471cdd1e4b065ebcfa1d557/)
+- [Dagger: A Fast Dependency Injector for Android and Java by Jesse Wilson](http://www.infoq.com/presentations/Dagger)
+- [Android App Anatomy by Eric Burke](http://www.infoq.com/presentations/Android-Design/)
+
+and reading a few articles...
+- [Android Dependency Injection](http://blog.andresteingress.com/2014/08/31/android-dependency-injection/)
+- [Blog List: Adding a Blog View Activity, Butterknife, and Dagger](http://www.pinnsg.com/blog-list-view-activity-butterknife-dagger/)
+- [Dagger 2 has Components](https://publicobject.com/2014/11/15/dagger-2-has-components/)
+- [Dependency injection on Android: Dagger (Part 1)](http://antonioleiva.com/dependency-injection-android-dagger-part-1/)
+- [Dagger: dependency injection on Android (Part 2)](http://antonioleiva.com/dagger-android-part-2/)
+- [Android Unit Test Idioms](http://tech.pristine.io/android-unit-test-idioms/)
+- [Android Testing With Robolectric](http://www.peterfriese.de/android-testing-with-robolectric/)
+
+Dagger 2 seemed like the right way to go.  After a bit more digging I found [Butterknife](http://jakewharton.github.io/butterknife/) for view injection.  The biggest problem I ran into was the distinct lack of examples on how to use Dagger 2 effectively (probably because it is still in beta).  I did find a few, but they were mostly targeted on how to set it up and not so much on how to use it in an actual android application.
+- [Dagger 2 - Simple](https://github.com/google/dagger/tree/master/examples/simple)
+- [Dagger 2 - Android Simple](https://github.com/google/dagger/tree/master/examples/android-simple)
+- [Dagger 2 - Android Activity Graphs](https://github.com/google/dagger/tree/master/examples/android-activity-graphs)
+- [U2020](https://github.com/JakeWharton/u2020)
+- [U2021](https://github.com/cgruber/u2020)
+- [Android Studio Robolectric Test Example](https://github.com/mutexkid/android-studio-robolectric-example)
+- [Tutorial: Set up android + gradle project with dagger](https://github.com/frankdu/android-gradle-dagger-tutorial)
+- [Instrumentation Testing with Dagger, Mockito, and Espresso](https://github.com/bryanstern/dagger-instrumentation-example)
+- [Dagger2 Example](https://github.com/mgrzechocinski/dagger2-example)
+- [SOLID: Noun Project Browser](https://github.com/blad/solid-android)
 
 After I figured out what I wanted to do for dependency injection, I wanted to figure out a good application architecture that would allow for very loose coupling and make it easy to separate view logic from business logic (something I got pretty good at in Angular).  Another benefit of having an architecture like this is that it makes TDD much easier... Mocking activities and views just to be able to test that your models behave as they should is absurd.
 
@@ -76,9 +101,32 @@ Here is a diagram along with a detailed explanation of how each part works.
 (pic)![Architecture Implementation with a ToDo App](/pictures/Architecture-Impl.png)
 If you want even more detail, you can look at the actual code provided in this repository.
 
-##DI Details ([Dagger 2](http://google.github.io/dagger/) & [Butterknife](http://jakewharton.github.io/butterknife/))
-As far as explaining what, how, and why, there are a few good tutorials already out there that do a pretty good job
-(refs)
+##References
+As far as explaining what, how, and why, there are a few good tutorials already out there that do a pretty good job...
+- Videos
+  - [DAGGER 2 - A New Type of dependency injection by Gregory Kick](https://www.youtube.com/watch?v=oK_XtfXPkqw)
+  - [The Future of Dependency Injection with Dagger 2 by Jake Wharton](https://www.parleys.com/talk/5471cdd1e4b065ebcfa1d557/)
+  - [Dagger: A Fast Dependency Injector for Android and Java by Jesse Wilson](http://www.infoq.com/presentations/Dagger)
+  - [Android App Anatomy by Eric Burke](http://www.infoq.com/presentations/Android-Design/)
+- Articles 
+  - [Android Dependency Injection](http://blog.andresteingress.com/2014/08/31/android-dependency-injection/)
+  - [Blog List: Adding a Blog View Activity, Butterknife, and Dagger](http://www.pinnsg.com/blog-list-view-activity-butterknife-dagger/)
+  - [Dagger 2 has Components](https://publicobject.com/2014/11/15/dagger-2-has-components/)
+  - [Dependency injection on Android: Dagger (Part 1)](http://antonioleiva.com/dependency-injection-android-dagger-part-1/)
+  - [Dagger: dependency injection on Android (Part 2)](http://antonioleiva.com/dagger-android-part-2/)
+  - [Android Unit Test Idioms](http://tech.pristine.io/android-unit-test-idioms/)
+  - [Android Testing With Robolectric](http://www.peterfriese.de/android-testing-with-robolectric/)
+- Github Pages / Example Code
+  - [Dagger 2 - Simple](https://github.com/google/dagger/tree/master/examples/simple)
+  - [Dagger 2 - Android Simple](https://github.com/google/dagger/tree/master/examples/android-simple)
+  - [Dagger 2 - Android Activity Graphs](https://github.com/google/dagger/tree/master/examples/android-activity-graphs)
+  - [U2020](https://github.com/JakeWharton/u2020)
+  - [U2021](https://github.com/cgruber/u2020)
+  - [Android Studio Robolectric Test Example](https://github.com/mutexkid/android-studio-robolectric-example)
+  - [Tutorial: Set up android + gradle project with dagger](https://github.com/frankdu/android-gradle-dagger-tutorial)
+  - [Instrumentation Testing with Dagger, Mockito, and Espresso](https://github.com/bryanstern/dagger-instrumentation-example)
+  - [Dagger2 Example](https://github.com/mgrzechocinski/dagger2-example)
+  - [SOLID: Noun Project Browser](https://github.com/blad/solid-android)
 
 ##Future work
 Despite the fact that this app is completely self contained (similar to how the todo app works from Facebook's Flux), I am pretty satisfied with out it turned out.  I came up with a couple different ideas on how server communication might be incorporated into this architecture, but I wasn't really happy with any of them.  Obviously, to be complete, server communication must fit into the equation somewhere, so that's what I'll be working on next.  Once I come up with a solution that im satisfied with, I will update this repo to reflect what I came up with.
