@@ -13,7 +13,7 @@ If you would like to get this project up and running so you can mess around with
 - Import project into Android Studio
 - Run app
 
-#Testing
+##Testing
 If you would like to run the tests included in this project
 - Find the src/test/java/com/armueller/fluxytodo directory
 - Right click on the package (inside Android Studio)
