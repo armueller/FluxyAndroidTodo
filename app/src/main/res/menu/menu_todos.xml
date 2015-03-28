@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Todos">
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="@string/action_view"
+        android:showAsAction="ifRoom" >
+        <menu>
+            <item android:id="@+id/filterAll"
+                android:title="All" />
+            <item android:id="@+id/filterActive"
+                android:title="Active" />
+            <item android:id="@+id/filterComplete"
+                android:title="Complete" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

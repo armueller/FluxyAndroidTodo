@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">FluxyTodo</string>
+    <string name="action_settings">Settings</string>
+    <string name="new_todo_placeholder">What needs to be done?</string>
+    <string name="action_view">View</string>
+    <string name="edit_delete_prompt">What do you want to do?</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="allFilter" type="color">#ffffffff</color>
+    <color name="activeFilter" type="color">#ff11db00</color>
+    <color name="completeFilter" type="color">#ffd2160b</color>
+    <color name="fab_color_1">#ff5252</color>
+    <color name="fab_color_1_muted">#ff8080</color>
+    <color name="fab_color_2">#9c27b0</color>
+    <color name="fab_color_2_muted">#a56ab0</color>
+</resources>
