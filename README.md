@@ -4,7 +4,7 @@ FluxyTodo is an Android application that serves to demonstrate a few different t
 - It also serves as a proof of concept for a new Android application architecture I came up with.
 - It promotes dependency injection, TDD (test driven development), and a unidirectional data-flow, which makes the separation of view and business logic simple and clear.
 
-####More information about what, why, and how, can be found in my [accompanying blog post](http://armueller.github.io/android/2015/03/28/flux-and-android.html).
+####More information about what, why, and how, can be found in my [accompanying blog post](http://armueller.github.io/android/2015/03/29/flux-and-android.html).
 
 ##Running
 If you would like to get this project up and running so you can mess around with it, just follow these simple steps.
