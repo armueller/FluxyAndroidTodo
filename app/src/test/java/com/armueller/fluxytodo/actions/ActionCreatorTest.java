@@ -35,8 +35,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.AddTodo action) {
-                assertThat(action.description).isEqualTo("Test");
+            public void addTodo(TodoAction action) {
+                assertThat(action.getData().get(TodoAction.DataKeys.DESCRIPTION, "")).isEqualTo("Test");
                 testDone.set(true);
             }
         });
@@ -52,8 +52,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.ToggleTodoComplete action) {
-                assertThat(action.todoId).isEqualTo(10);
+            public void addTodo(TodoAction action) {
+                assertThat(action.getData().get(TodoAction.DataKeys.ID, -1)).isEqualTo(10);
                 testDone.set(true);
             }
         });
@@ -69,8 +69,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.ToggleAllTodosComplete action) {
-                assertThat(action).isNotNull();
+            public void addTodo(TodoAction action) {
+                assertThat(action.getType()).isEqualTo(TodoAction.ActionTypes.TOGGLE_ALL);
                 testDone.set(true);
             }
         });
@@ -86,8 +86,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.SetTodoItemAsEditable action) {
-                assertThat(action.todoId).isEqualTo(10);
+            public void addTodo(ViewAction action) {
+                assertThat(action.getData().get(ViewAction.DataKeys.ID, -1)).isEqualTo(10);
                 testDone.set(true);
             }
         });
@@ -103,9 +103,9 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.EditTodo action) {
-                assertThat(action.todoId).isEqualTo(10);
-                assertThat(action.todoDescription).isEqualTo("New Description");
+            public void addTodo(TodoAction action) {
+                assertThat(action.getData().get(TodoAction.DataKeys.ID, -1)).isEqualTo(10);
+                assertThat(action.getData().get(TodoAction.DataKeys.DESCRIPTION, "")).isEqualTo("New Description");
                 testDone.set(true);
             }
         });
@@ -121,8 +121,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.DeleteTodo action) {
-                assertThat(action.todoId).isEqualTo(10);
+            public void addTodo(TodoAction action) {
+                assertThat(action.getData().get(TodoAction.DataKeys.ID, -1)).isEqualTo(10);
                 testDone.set(true);
             }
         });
@@ -138,8 +138,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.DeleteAllCompleteTodos action) {
-                assertThat(action).isNotNull();
+            public void addTodo(TodoAction action) {
+                assertThat(action.getType()).isEqualTo(TodoAction.ActionTypes.DELETE_ALL);
                 testDone.set(true);
             }
         });
@@ -155,8 +155,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.UndoDeleteAllCompleteTodos action) {
-                assertThat(action).isNotNull();
+            public void addTodo(TodoAction action) {
+                assertThat(action.getType()).isEqualTo(TodoAction.ActionTypes.UNDO_DELETE_ALL);
                 testDone.set(true);
             }
         });
@@ -172,8 +172,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.ViewAllTodos action) {
-                assertThat(action).isNotNull();
+            public void addTodo(ViewAction action) {
+                assertThat(action.getType()).isEqualTo(ViewAction.ActionTypes.VIEW_ALL);
                 testDone.set(true);
             }
         });
@@ -189,8 +189,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.ViewActiveTodos action) {
-                assertThat(action).isNotNull();
+            public void addTodo(ViewAction action) {
+                assertThat(action.getType()).isEqualTo(ViewAction.ActionTypes.VIEW_ACTIVE);
                 testDone.set(true);
             }
         });
@@ -206,8 +206,8 @@ public class ActionCreatorTest {
 
         actionBus.register(new Object() {
             @Subscribe
-            public void addTodo(Actions.ViewCompleteTodos action) {
-                assertThat(action).isNotNull();
+            public void addTodo(ViewAction action) {
+                assertThat(action.getType()).isEqualTo(ViewAction.ActionTypes.VIEW_COMPLETE);
                 testDone.set(true);
             }
         });

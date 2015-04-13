@@ -15,47 +15,59 @@ public class ActionCreator {
         this.actionBus = actionBus;
     }
 
-    public void createNewTodoAction(String newTodoDescription) {
-        actionBus.post(new Actions.AddTodo(newTodoDescription));
+    public final void createNewTodoAction(final String newTodoDescription) {
+        DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(TodoAction.DataKeys.DESCRIPTION, newTodoDescription);
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.ADD, bundle));
     }
 
-    public void createToggleTodoCompleteAction(long todoId) {
-        actionBus.post(new Actions.ToggleTodoComplete(todoId));
+    public final void createToggleTodoCompleteAction(long todoId) {
+        DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(TodoAction.DataKeys.ID, todoId);
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
     }
 
-    public void createToggleAllTodosCompleteAction() {
-        actionBus.post(new Actions.ToggleAllTodosComplete());
+    public final void createToggleAllTodosCompleteAction() {
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE_ALL));
     }
 
-    public void createSetTodoItemAsEditableAction(long todoId) {
-        actionBus.post(new Actions.SetTodoItemAsEditable(todoId));
+    public final void createEditTodoAction(long todoId, String newDescription) {
+        DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(TodoAction.DataKeys.ID, todoId);
+        bundle.put(TodoAction.DataKeys.DESCRIPTION, newDescription);
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.EDIT, bundle));
     }
 
-    public void createEditTodoAction(long todoId, String newDescription) {
-        actionBus.post(new Actions.EditTodo(todoId, newDescription));
+    public final void createDeleteTodoAction(long todoId) {
+        DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(TodoAction.DataKeys.ID, todoId);
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.DELETE, bundle));
     }
 
-    public void createDeleteTodoAction(long todoId) {
-        actionBus.post(new Actions.DeleteTodo(todoId));
+    public final void createDeleteAllCompleteTodosAction() {
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.DELETE_ALL));
     }
 
-    public void createDeleteAllCompleteTodosAction() {
-        actionBus.post(new Actions.DeleteAllCompleteTodos());
+    public final void createUndoDeleteAllCompleteTodosAction() {
+        actionBus.post(new TodoAction(TodoAction.ActionTypes.UNDO_DELETE_ALL));
     }
 
-    public void createUndoDeleteAllCompleteTodosAction() {
-        actionBus.post(new Actions.UndoDeleteAllCompleteTodos());
+
+    public final void createViewAllTodosAction() {
+        actionBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_ALL));
     }
 
-    public void createViewAllTodosAction() {
-        actionBus.post(new Actions.ViewAllTodos());
+    public final void createViewActiveTodosAction() {
+        actionBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_ACTIVE));
     }
 
-    public void createViewActiveTodosAction() {
-        actionBus.post(new Actions.ViewActiveTodos());
+    public final void createViewCompleteTodosAction() {
+        actionBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_COMPLETE));
     }
 
-    public void createViewCompleteTodosAction() {
-        actionBus.post(new Actions.ViewCompleteTodos());
+    public final void createSetTodoItemAsEditableAction(long todoId) {
+        DataBundle<ViewAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(ViewAction.DataKeys.ID, todoId);
+        actionBus.post(new ViewAction(ViewAction.ActionTypes.MARK_EDITABLE, bundle));
     }
 }

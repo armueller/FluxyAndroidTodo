@@ -1,6 +1,8 @@
 package com.armueller.fluxytodo.stores;
 
-import com.armueller.fluxytodo.actions.Actions;
+import com.armueller.fluxytodo.actions.DataBundle;
+import com.armueller.fluxytodo.actions.TodoAction;
+import com.armueller.fluxytodo.actions.ViewAction;
 import com.armueller.fluxytodo.busses.ActionBus;
 import com.armueller.fluxytodo.busses.DataBus;
 import com.armueller.fluxytodo.data.FilteredTodoList;
@@ -40,32 +42,28 @@ public class TodosActivityStore {
     }
 
     @Subscribe
-    public void changeActiveFilter(Actions.ViewAction viewAction) {
-        if (viewAction instanceof Actions.ViewActiveTodos) {
-            activeFilter = FilteredTodoList.Filter.ACTIVE;
-        } else if (viewAction instanceof Actions.ViewCompleteTodos) {
-            activeFilter = FilteredTodoList.Filter.COMPLETE;
-        } else {
-            activeFilter = FilteredTodoList.Filter.ALL;
+    public final void reactToViewAction(ViewAction action) {
+        DataBundle<ViewAction.DataKeys> data = action.getData();
+        long id = (long) data.get(ViewAction.DataKeys.ID, -1);
+
+        switch (action.getType()) {
+            case VIEW_ALL:
+                activeFilter = FilteredTodoList.Filter.ACTIVE;
+                dataBus.post(new FilteredTodoList(activeFilter, rawTodoList));
+                break;
+            case VIEW_ACTIVE:
+                activeFilter = FilteredTodoList.Filter.COMPLETE;
+                dataBus.post(new FilteredTodoList(activeFilter, rawTodoList));
+                break;
+            case VIEW_COMPLETE:
+                activeFilter = FilteredTodoList.Filter.ALL;
+                dataBus.post(new FilteredTodoList(activeFilter, rawTodoList));
+                break;
+            case MARK_EDITABLE:
+                editModeActiveForTodoId = new Long(id);
+                dataBus.post(editModeActiveForTodoId);
+                break;
         }
-
-        dataBus.post(new FilteredTodoList(activeFilter, rawTodoList));
-    }
-
-    @Subscribe
-    public void setEditModeActiveForTodoId(Actions.SetTodoItemAsEditable setTodoItemAsEditable) {
-        editModeActiveForTodoId = new Long(setTodoItemAsEditable.todoId);
-        dataBus.post(editModeActiveForTodoId);
-        //Probably not a great idea to post a primitive to the data bus...
-        // But since nothing else is posting longs to the bus it will suffice
-    }
-
-    //If this action was triggered, it means the user is finished editing
-    // and would like to save their changes.
-    @Subscribe
-    public void editTodo(Actions.EditTodo editTodoAction) {
-        editModeActiveForTodoId = new Long(-1);
-        dataBus.post(editModeActiveForTodoId);
     }
 
     @Produce
@@ -74,11 +72,14 @@ public class TodosActivityStore {
     }
 
     @Subscribe
-    public void todoActionPerformed(Actions.TodoAction todoAction) {
-        if (todoAction instanceof Actions.DeleteAllCompleteTodos) {
+    public void reactToTodoAction(TodoAction action) {
+        shouldShowUndoButton = Boolean.FALSE;
+
+        if (action.getType() == TodoAction.ActionTypes.EDIT) {
+            editModeActiveForTodoId = new Long(-1);
+            dataBus.post(editModeActiveForTodoId);
+        } else if (action.getType() == TodoAction.ActionTypes.DELETE_ALL) {
             shouldShowUndoButton = Boolean.TRUE;
-        } else {
-            shouldShowUndoButton = Boolean.FALSE;
         }
 
         dataBus.post(shouldShowUndoButton);

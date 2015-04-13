@@ -1,6 +1,8 @@
 package com.armueller.fluxytodo.models;
 
-import com.armueller.fluxytodo.actions.Actions;
+import com.armueller.fluxytodo.actions.DataBundle;
+import com.armueller.fluxytodo.actions.TodoAction;
+import com.armueller.fluxytodo.actions.ViewAction;
 import com.armueller.fluxytodo.busses.ActionBus;
 import com.armueller.fluxytodo.busses.DataBus;
 import com.armueller.fluxytodo.data.RawTodoList;
@@ -58,7 +60,9 @@ public class TodoListManagerTest {
 
     private void createTodos(final int numberOfTodos) throws InterruptedException {
         for (int i = 0; i < numberOfTodos; i++) {
-            actionBus.post(new Actions.AddTodo("Testing " + i));
+            DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+            bundle.put(TodoAction.DataKeys.DESCRIPTION, "Testing " + i);
+            actionBus.post(new TodoAction(TodoAction.ActionTypes.ADD, bundle));
             Thread.sleep(10);
         }
     }
@@ -94,7 +98,9 @@ public class TodoListManagerTest {
                 todoItems.clear();
                 todoItems.addAll(rawTodoList.list);
                 if (!todoItems.get(1).isComplete()) {
-                    actionBus.post(new Actions.ToggleTodoComplete(todoItems.get(1).getId()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(1).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
                 } else {
                     assertThat(todoItems.get(0).isComplete()).isFalse();
                     assertThat(todoItems.get(1).isComplete()).isTrue();
@@ -120,7 +126,7 @@ public class TodoListManagerTest {
                 todoItems.clear();
                 todoItems.addAll(rawTodoList.list);
                 if (!todoItems.get(0).isComplete()) {
-                    actionBus.post(new Actions.ToggleAllTodosComplete());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE_ALL));
                 } else {
                     assertThat(todoItems.get(0).isComplete()).isTrue();
                     assertThat(todoItems.get(1).isComplete()).isTrue();
@@ -148,7 +154,10 @@ public class TodoListManagerTest {
                 todoItems.addAll(rawTodoList.list);
 
                 if (todoItems.get(0).getDescription().equals("Testing 0")) {
-                    actionBus.post(new Actions.EditTodo(todoItems.get(0).getId(), "New Todo Description"));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(0).getId());
+                    bundle.put(TodoAction.DataKeys.DESCRIPTION, "New Todo Description");
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.EDIT, bundle));
                 } else {
                     assertThat(todoItems.get(0).getDescription()).isEqualTo("New Todo Description");
                     testDone.set(true);
@@ -176,7 +185,9 @@ public class TodoListManagerTest {
 
                 if (todoItems.size() == 3) {
                     deletedId.set(todoItems.get(1).getId());
-                    actionBus.post(new Actions.DeleteTodo(deletedId.get()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(1).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.DELETE, bundle));
                 } else {
                     assertThat(todoItems.size()).isEqualTo(2);
                     assertThat(todoItems.get(0).getId()).isNotEqualTo(deletedId.get());
@@ -208,17 +219,21 @@ public class TodoListManagerTest {
 
                 if (!checkedTodo1.get()) {
                     checkedTodo1.set(true);
-                    actionBus.post(new Actions.ToggleTodoComplete(todoItems.get(1).getId()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(1).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
                     return;
                 }
                 if (!checkedTodo3.get()) {
                     checkedTodo3.set(true);
-                    actionBus.post(new Actions.ToggleTodoComplete(todoItems.get(3).getId()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(3).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
                     return;
                 }
                 if (!deleted.get() && checkedTodo1.get() && checkedTodo3.get()) {
                     deleted.set(true);
-                    actionBus.post(new Actions.DeleteAllCompleteTodos());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.DELETE_ALL));
                     return;
                 }
                 if (deleted.get()) {
@@ -251,22 +266,26 @@ public class TodoListManagerTest {
 
                 if (!checkedTodo1.get()) {
                     checkedTodo1.set(true);
-                    actionBus.post(new Actions.ToggleTodoComplete(todoItems.get(1).getId()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(1).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
                     return;
                 }
                 if (!checkedTodo3.get()) {
                     checkedTodo3.set(true);
-                    actionBus.post(new Actions.ToggleTodoComplete(todoItems.get(3).getId()));
+                    DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+                    bundle.put(TodoAction.DataKeys.ID, todoItems.get(3).getId());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.TOGGLE, bundle));
                     return;
                 }
                 if (!deletedTodos.get() && checkedTodo1.get() && checkedTodo3.get()) {
                     deletedTodos.set(true);
-                    actionBus.post(new Actions.DeleteAllCompleteTodos());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.DELETE_ALL));
                     return;
                 }
                 if (!undidDelete.get() && deletedTodos.get()) {
                     undidDelete.set(true);
-                    actionBus.post(new Actions.UndoDeleteAllCompleteTodos());
+                    actionBus.post(new TodoAction(TodoAction.ActionTypes.UNDO_DELETE_ALL));
                     return;
                 }
 

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FluxyTodo.iml" filepath="$PROJECT_DIR$/FluxyTodo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FluxyAndroidTodo.iml" filepath="$PROJECT_DIR$/FluxyAndroidTodo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
