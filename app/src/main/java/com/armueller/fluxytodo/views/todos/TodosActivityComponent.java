@@ -16,7 +16,7 @@ public interface TodosActivityComponent {
 
     public final static class Initializer {
         public static TodosActivityComponent init(TodosActivity activity) {
-            return Dagger_TodosActivityComponent.builder()
+            return DaggerTodosActivityComponent.builder()
                     .todosApplicationComponent(((TodosApplication) activity.getApplication()).component())
                     .todosActivityModule(new TodosActivityModule(activity))
                     .build();

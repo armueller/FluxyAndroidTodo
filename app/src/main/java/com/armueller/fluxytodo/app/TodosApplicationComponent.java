@@ -20,7 +20,7 @@ public interface TodosApplicationComponent {
 
     public final static class Initializer {
         public static TodosApplicationComponent init(TodosApplication app) {
-            return Dagger_TodosApplicationComponent.builder()
+            return DaggerTodosApplicationComponent.builder()
                     .todosApplicationModule(new TodosApplicationModule(app))
                     .build();
         }

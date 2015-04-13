@@ -1,6 +1,8 @@
 package com.armueller.fluxytodo.stores;
 
-import com.armueller.fluxytodo.actions.Actions;
+import com.armueller.fluxytodo.actions.DataBundle;
+import com.armueller.fluxytodo.actions.TodoAction;
+import com.armueller.fluxytodo.actions.ViewAction;
 import com.armueller.fluxytodo.busses.ActionBus;
 import com.armueller.fluxytodo.busses.DataBus;
 import com.armueller.fluxytodo.data.FilteredTodoList;
@@ -73,7 +75,7 @@ public class TodosActivityStoreTest {
             }
         });
 
-        dataBus.post(new Actions.ViewAllTodos());
+        dataBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_ALL));
         // Wait for test to finish or timeout
         while (!testDone.get()) ;
     }
@@ -97,7 +99,7 @@ public class TodosActivityStoreTest {
             }
         });
 
-        dataBus.post(new Actions.ViewActiveTodos());
+        dataBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_ACTIVE));
         // Wait for test to finish or timeout
         while (!testDone.get()) ;
     }
@@ -121,7 +123,7 @@ public class TodosActivityStoreTest {
             }
         });
 
-        dataBus.post(new Actions.ViewCompleteTodos());
+        dataBus.post(new ViewAction(ViewAction.ActionTypes.VIEW_COMPLETE));
         // Wait for test to finish or timeout
         while (!testDone.get()) ;
     }
@@ -130,7 +132,9 @@ public class TodosActivityStoreTest {
     public void setEditModeActiveForTodoIdTest() {
         final AtomicBoolean testDone = new AtomicBoolean(false);
 
-        dataBus.post(new Actions.SetTodoItemAsEditable(2));
+        DataBundle<ViewAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(ViewAction.DataKeys.ID, 2);
+        dataBus.post(new ViewAction(ViewAction.ActionTypes.MARK_EDITABLE, bundle));
 
         dataBus.register(new Object() {
             @Subscribe
@@ -150,13 +154,19 @@ public class TodosActivityStoreTest {
 
         dataBus.register(new Object() {
             @Subscribe
-            public void onListUpdated(Actions.EditTodo editTodoAction) {
-                assertThat(editTodoAction.todoId).isEqualTo(2);
+            public void onListUpdated(TodoAction todoAction) {
+
+                assertThat(todoAction.getType()).isEqualTo(TodoAction.ActionTypes.EDIT);
+                assertThat(todoAction.getData().get(TodoAction.DataKeys.ID, -1)).isEqualTo(2);
+                assertThat(todoAction.getData().get(TodoAction.DataKeys.DESCRIPTION, "")).isEqualTo("Test");
                 testDone.set(true);
             }
         });
 
-        dataBus.post(new Actions.EditTodo(2, "Test"));
+        DataBundle<TodoAction.DataKeys> bundle = new DataBundle<>();
+        bundle.put(TodoAction.DataKeys.ID, 2);
+        bundle.put(TodoAction.DataKeys.DESCRIPTION, "Test");
+        dataBus.post(new TodoAction(TodoAction.ActionTypes.EDIT, bundle));
         // Wait for test to finish or timeout
         while (!testDone.get()) ;
     }
@@ -165,7 +175,7 @@ public class TodosActivityStoreTest {
     public void shouldNotShowUndoButtonTest() {
         final AtomicBoolean testDone = new AtomicBoolean(false);
 
-        dataBus.post(new Actions.UndoDeleteAllCompleteTodos());
+        dataBus.post(new TodoAction(TodoAction.ActionTypes.UNDO_DELETE_ALL));
 
         dataBus.register(new Object() {
             @Subscribe
@@ -183,7 +193,7 @@ public class TodosActivityStoreTest {
     public void shouldShowUndoButtonTest() {
         final AtomicBoolean testDone = new AtomicBoolean(false);
 
-        dataBus.post(new Actions.DeleteAllCompleteTodos());
+        dataBus.post(new TodoAction(TodoAction.ActionTypes.DELETE_ALL));
 
         dataBus.register(new Object() {
             @Subscribe

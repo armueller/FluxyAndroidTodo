@@ -1,15 +1,14 @@
 package com.armueller.fluxytodo.models;
 
+import com.armueller.fluxytodo.actions.DataBundle;
+import com.armueller.fluxytodo.actions.TodoAction;
+import com.armueller.fluxytodo.actions.ViewAction;
 import com.armueller.fluxytodo.busses.ActionBus;
-import com.armueller.fluxytodo.actions.Actions;
 import com.armueller.fluxytodo.busses.DataBus;
 import com.armueller.fluxytodo.data.RawTodoList;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -32,48 +31,70 @@ public class TodoListManager {
     }
 
     @Subscribe
-    public void addTodo(Actions.AddTodo addTodoAction) {
-        TodoItem newItem = new TodoItem(System.currentTimeMillis(), addTodoAction.description, false);
-        todoItems.put(newItem.getId(), newItem);
+    public void reactToTodoAction(TodoAction action) {
+        DataBundle<TodoAction.DataKeys> data = action.getData();
+        long id = (long) data.get(TodoAction.DataKeys.ID, -1L);
+        String description = (String) data.get(TodoAction.DataKeys.DESCRIPTION, "");
 
-        dataBus.post(new RawTodoList(todoItems));
-    }
-
-    @Subscribe
-    public void toggleTodoComplete(Actions.ToggleTodoComplete toggleTodoCompleteAction) {
-        TodoItem oldItem = todoItems.get(toggleTodoCompleteAction.todoId);
-        todoItems.put(oldItem.getId(), new TodoItem(oldItem.getId(), oldItem.getDescription(), !oldItem.isComplete()));
-
-        dataBus.post(new RawTodoList(todoItems));
-    }
-
-    @Subscribe
-    public void toggleAllTodosComplete(Actions.ToggleAllTodosComplete toggleAllTodoCompleteAction) {
-        for (Long key : todoItems.keySet()) {
-            TodoItem oldItem = todoItems.get(key);
-            todoItems.put(key, new TodoItem(oldItem.getId(), oldItem.getDescription(), true));
+        switch (action.getType()) {
+            case ADD:
+                addTodo(description);
+                break;
+            case TOGGLE:
+                toggleTodoComplete(id);
+                break;
+            case TOGGLE_ALL:
+                toggleAllTodosComplete();
+                break;
+            case EDIT:
+                editTodo(id, description);
+                break;
+            case DELETE:
+                deleteTodo(id);
+                break;
+            case DELETE_ALL:
+                deleteAllCompleteTodos();
+                break;
+            case UNDO_DELETE_ALL:
+                undoDeleteCompleteAllTodos();
+                break;
         }
 
         dataBus.post(new RawTodoList(todoItems));
     }
 
-    @Subscribe
-    public void editTodo(Actions.EditTodo editTodoAction) {
-        TodoItem oldItem = todoItems.get(editTodoAction.todoId);
-        todoItems.put(oldItem.getId(), new TodoItem(oldItem.getId(), editTodoAction.todoDescription, oldItem.isComplete()));
-
-        dataBus.post(new RawTodoList(todoItems));
+    @Produce
+    public RawTodoList produceTodoList() {
+        return new RawTodoList(todoItems);
     }
 
-    @Subscribe
-    public void deleteTodo(Actions.DeleteTodo deleteTodoAction) {
-        todoItems.remove(deleteTodoAction.todoId);
-
-        dataBus.post(new RawTodoList(todoItems));
+    public final void addTodo(String description) {
+        TodoItem newItem = new TodoItem(System.currentTimeMillis(), description, false);
+        todoItems.put(newItem.getId(), newItem);
     }
 
-    @Subscribe
-    public void deleteAllCompleteTodos(Actions.DeleteAllCompleteTodos deleteAllCompleteTodosAction) {
+    public final void toggleTodoComplete(long id) {
+        TodoItem oldItem = todoItems.get(id);
+        todoItems.put(oldItem.getId(), new TodoItem(oldItem.getId(), oldItem.getDescription(), !oldItem.isComplete()));
+    }
+
+    public final void toggleAllTodosComplete() {
+        for (Long key : todoItems.keySet()) {
+            TodoItem oldItem = todoItems.get(key);
+            todoItems.put(key, new TodoItem(oldItem.getId(), oldItem.getDescription(), true));
+        }
+    }
+
+    public final void editTodo(long id, String description) {
+        TodoItem oldItem = todoItems.get(id);
+        todoItems.put(oldItem.getId(), new TodoItem(oldItem.getId(), description, oldItem.isComplete()));
+    }
+
+    public final void deleteTodo(long id) {
+        todoItems.remove(id);
+    }
+
+    public final void deleteAllCompleteTodos() {
         backupTodoItems.clear();
         backupTodoItems.putAll((HashMap<Long, TodoItem>) todoItems.clone());
         for (TodoItem item : ((HashMap<Long, TodoItem>)todoItems.clone()).values()) {
@@ -81,23 +102,13 @@ public class TodoListManager {
                 todoItems.remove(item.getId());
             }
         }
-
-        dataBus.post(new RawTodoList(todoItems));
     }
 
-    @Subscribe
-    public void undoDeleteCompleteAllTodos(Actions.UndoDeleteAllCompleteTodos undoDeleteAllCompleteTodosAction) {
+    public final void undoDeleteCompleteAllTodos() {
         if (!backupTodoItems.isEmpty()) {
             todoItems.clear();
             todoItems.putAll((HashMap<Long, TodoItem>) backupTodoItems.clone());
             backupTodoItems.clear();
-
-            dataBus.post(new RawTodoList(todoItems));
         }
-    }
-
-    @Produce
-    public RawTodoList produceTodoList() {
-        return new RawTodoList(todoItems);
     }
 }
