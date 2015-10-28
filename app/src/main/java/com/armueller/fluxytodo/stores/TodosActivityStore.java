@@ -20,6 +20,7 @@ public class TodosActivityStore {
     private Boolean shouldShowUndoButton;
 
     private DataBus dataBus;
+    private ActionBus actionBus;
     private RawTodoList rawTodoList;
     private FilteredTodoList.Filter activeFilter;
 
@@ -27,12 +28,17 @@ public class TodosActivityStore {
     public TodosActivityStore(ActionBus actionBus, DataBus dataBus) {
         this.dataBus = dataBus;
         dataBus.register(this);
+        this.actionBus = actionBus;
         actionBus.register(this);
         editModeActiveForTodoId = new Long(-1);
         shouldShowUndoButton = Boolean.FALSE;
-
         activeFilter = FilteredTodoList.Filter.ALL;
         rawTodoList = new RawTodoList();
+    }
+
+    public void onPause() {
+        dataBus.unregister(this);
+        actionBus.unregister(this);
     }
 
     @Subscribe

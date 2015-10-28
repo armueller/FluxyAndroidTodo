@@ -120,8 +120,9 @@ public class TodosFragment extends Fragment {
 
     @Override
     public void onPause() {
-        super.onPause();
+        todoListManager.onPause();
         dataBus.unregister(this);
+        super.onPause();
     }
 
     @Override

@@ -104,12 +104,13 @@ public class TodosActivity extends Activity {
 
     @Override
     protected void onResume() {
-        super.onPause();
+        super.onResume();
         dataBus.register(this);
     }
 
     @Override
     protected void onPause() {
+        todosActivityStore.onPause();
         super.onPause();
         dataBus.unregister(this);
     }
