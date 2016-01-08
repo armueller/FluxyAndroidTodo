@@ -20,6 +20,7 @@ public class TodoListManager {
     private final HashMap<Long, TodoItem> backupTodoItems;
     private final HashMap<Long, TodoItem> todoItems;
     private final DataBus dataBus;
+    private final ActionBus actionBus;
 
     @Inject
     public TodoListManager(ActionBus actionBus, DataBus dataBus) {
@@ -27,7 +28,13 @@ public class TodoListManager {
         todoItems = new HashMap<Long, TodoItem>();
         this.dataBus = dataBus;
         dataBus.register(this);
+        this.actionBus = actionBus;
         actionBus.register(this);
+    }
+
+    public void onPause() {
+        dataBus.unregister(this);
+        actionBus.unregister(this);
     }
 
     @Subscribe
